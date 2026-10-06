@@ -16,9 +16,10 @@ Seiran（`/home/projects/aitc/yano/japersonaplex`）での運用メモ。ワー�
   - 一部だけ: `KINDS="main"`、台本を作り直さない: `SKIP_SCRIPTS=1`。シャードは同じ配列番号で投げ直せば続きから進む。
 - LoRA 学習（GPU 1 枚）: `RUN_NAME=pilot40_lora_v1 STEPS=1200 FLIP=none TRAIN_ARGS="--save-every 200 --eval-every 100" sbatch slurm/train_lora.sbatch`。
   学習データの既定は `data/datagen/pilot40/main`（QA は入れない）。評価専用セットの損失は `outputs/<RUN_NAME>/metrics.jsonl` の `valid_h_*`。
-- 全パラメータ学習: `RUN_NAME=full_v1 NPROC=7 STEPS=500 TRAIN_ARGS="--eval-every 25 --save-every 100" sbatch --gres=gpu:7 slurm/train_full.sbatch`
+- 全パラメータ学習: `RUN_NAME=full_v1 NPROC=7 STEPS=500 TRAIN_ARGS="--user-weight 0 --eval-every 25 --save-every 100" sbatch --gres=gpu:7 slurm/train_full.sbatch`
   （既定は 8 GPU。空きに合わせて NPROC と --gres をそろえて変える。再開は同じ GPU 数のときだけ）。B200 7 枚で約 1 秒/step、
   CPU メモリ 332 GB、保存は推論用の重み 17 GB と再開用（最新だけ）約 100 GB。評価は `FULL=1` を付けて `eval_flip.sbatch`。
+  `train_full.py` の `--user-weight` の既定は 1.0（user 側の損失あり）で、LoRA（既定 0）とそろえるには 0 を明示する。代表（full_mix）のコマンドは `docs/ja-pilot40-train.md` の「合わせたデータでの全パラメータ学習」。
 - flip 評価: `RUN_NAME=... EVAL_STEPS="0 400 800 1200" sbatch --array=0-3 slurm/eval_flip.sbatch`（0 は LoRA なし）。
   評価セットは `data/pilot/flip.jsonl`（pyopenjtalk の声）と `data/datagen/pilot40/flip40v2/flip.jsonl`（事実を直接聞く質問を TTS。
   `slurm/make_flip.sbatch` で作る。v1 の `flip40` は質問が間接的で雑音が多い）。
@@ -29,7 +30,7 @@ Seiran（`/home/projects/aitc/yano/japersonaplex`）での運用メモ。ワー�
   `flip_table.py` は flip40 v2 の不備のある 5 問を外して数える（109 問）。
 - データ v4（10/04〜。user の聞き方を 4 つの形に混ぜる）: v3 の引数に `--ask-forms name:0.2,paraphrase:0.25,situational:0.3,indirect:0.25 --p-hours 0.55`
   を足す（コマンドは `docs/ja-datagen.md` の「データ v4」）。v4 だけだと項目名で直接聞く形が落ちるので、学習は v3・v4・v4b を合わせた
-  `data/datagen/pilot40mix/main/npz_train`（リンク、191 h）で行う。**代表は pilot40mix の step 4800**（`docs/ja-pilot40-train.md` の「v3 と v4・v4b を合わせて 1 本」）。
+  `data/datagen/pilot40mix/main/npz_train`（リンク、191 h）で行う。**代表は全パラメータ学習の full_mix の step 1200**（同じデータ、`--user-weight 0`。`docs/ja-pilot40-train.md` の「合わせたデータでの全パラメータ学習」。LoRA なら pilot40mix の step 4800）。
   評価は seed 3 つ（`EVAL_ARGS="--seed 1" OUT_SUFFIX=_seed1` など）で回し、片側の正答で比べる（seed だけで 4〜15 動く）。
 - 数字の表記の A/B: `NPZ_KANJI=1` を付けて `submit_datagen.sh` を流すと、同じ音声から漢数字版の `npz_kanji_{train,valid}` もできる。
   表は `python scripts/flip_table.py outputs/<RUN_NAME>/eval_*`。
