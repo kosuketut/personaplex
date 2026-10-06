@@ -1,0 +1,50 @@
+[
+  {
+    "start": 1.0,
+    "dur": 3.59,
+    "text": "こんにちは。ちょっと相談してもいいですか。",
+    "mora_per_s": 6.4,
+    "personaplex(en)": {
+      "tokens": 56,
+      "tokens_per_s": 15.6,
+      "fits": false
+    },
+    "llm-jp-moshi(ja)": {
+      "tokens": 10,
+      "tokens_per_s": 2.8,
+      "fits": true
+    }
+  },
+  {
+    "start": 10.0,
+    "dur": 6.43,
+    "text": "最近、夜なかなか眠れなくて困っているんです。何かいい方法はありますか。",
+    "mora_per_s": 6.7,
+    "personaplex(en)": {
+      "tokens": 92,
+      "tokens_per_s": 14.3,
+      "fits": false
+    },
+    "llm-jp-moshi(ja)": {
+      "tokens": 18,
+      "tokens_per_s": 2.8,
+      "fits": true
+    }
+  },
+  {
+    "start": 26.0,
+    "dur": 5.32,
+    "text": "なるほど。寝る前にスマホを見るのは、やっぱりよくないんでしょうか。",
+    "mora_per_s": 6.4,
+    "personaplex(en)": {
+      "tokens": 84,
+      "tokens_per_s": 15.8,
+      "fits": false
+    },
+    "llm-jp-moshi(ja)": {
+      "tokens": 23,
+      "tokens_per_s": 4.3,
+      "fits": true
+    }
+  }
+]

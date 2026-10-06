@@ -183,3 +183,13 @@ mlx-trace.json
 # Include everything in assets
 !assets/
 !assets/**
+
+# japersonaplex
+checkpoints/
+outputs/
+offload_weights/
+data/
+runs/
+logs/
+tmp/
+.uv/

@@ -1,0 +1,13 @@
+# torch 以外の依存。slurm/setup_env.sbatch は SIF の torch を使う venv に、scripts/seiran_setup_envs.sh は
+# uv の venv（data/envs/main、torch 2.8.0+cu128）に入れる。moshi 本体はどちらも --no-deps で別途入れる。
+# pytest はここからしか入らない（seiran_setup_envs.sh の最後のテストが使う）。
+safetensors>=0.4.0
+huggingface-hub>=0.24
+einops==0.7
+sentencepiece
+sphn>=0.1.4,<0.2
+pyloudnorm
+soundfile
+scipy
+pyopenjtalk
+pytest
